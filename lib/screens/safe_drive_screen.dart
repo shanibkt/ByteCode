@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SafeDriveScreen extends StatefulWidget {
+  const SafeDriveScreen({super.key});
+
   @override
   _SafeDriveScreenState createState() => _SafeDriveScreenState();
 }
@@ -33,7 +35,7 @@ class _SafeDriveScreenState extends State<SafeDriveScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Image.asset('assets/images/Logo.png', height: 100), // Logo
-            Icon(Icons.menu, color: Colors.white), // Menu Icon
+            const Icon(Icons.menu, color: Colors.white), // Menu Icon
           ],
         ),
       ),
@@ -44,35 +46,35 @@ class _SafeDriveScreenState extends State<SafeDriveScreen> {
           children: [
             TextField(
               decoration: InputDecoration(
-                prefixIcon: Icon(Icons.circle, color: Colors.white),
+                prefixIcon: const Icon(Icons.circle, color: Colors.white),
                 labelText: 'Starting Place',
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle: const TextStyle(color: Colors.white),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                  borderSide: const BorderSide(color: Colors.white),
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             TextField(
               decoration: InputDecoration(
-                prefixIcon: Icon(Icons.location_pin, color: Colors.white),
+                prefixIcon: const Icon(Icons.location_pin, color: Colors.white),
                 labelText: 'Ending Place',
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle: const TextStyle(color: Colors.white),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                  borderSide: const BorderSide(color: Colors.white),
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             Row(
               children: [
                 ElevatedButton.icon(
                   onPressed: () => _selectDate(context),
-                  icon: Icon(Icons.calendar_today),
+                  icon: const Icon(Icons.calendar_today),
                   label: Text(selectedDate == null
                       ? "Reporting time"
                       : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}"),
@@ -81,14 +83,14 @@ class _SafeDriveScreenState extends State<SafeDriveScreen> {
                     foregroundColor: Colors.black,
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: () {},
-                  child: Text("Submit"),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.black,
                   ),
+                  child: const Text("Submit"),
                 ),
               ],
             ),
@@ -99,7 +101,7 @@ class _SafeDriveScreenState extends State<SafeDriveScreen> {
         backgroundColor: Colors.green[800],
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white70,
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.alt_route), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.car_rental), label: ''),

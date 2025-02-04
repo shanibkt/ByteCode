@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 84, 150, 81),
+      backgroundColor: const Color.fromARGB(255, 84, 150, 81),
       body: Center(
         // Center widget to ensure proper alignment
         child: Image.asset(

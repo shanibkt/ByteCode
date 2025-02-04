@@ -57,7 +57,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 84, 150, 81),
+      backgroundColor: const Color.fromARGB(255, 84, 150, 81),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Form(
