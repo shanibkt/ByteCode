@@ -1,6 +1,7 @@
 import 'dart:developer';
+import 'package:bytecode/screens/bottom.dart';
+import 'package:bytecode/screens/home_screen.dart';
 import 'package:bytecode/screens/registration.dart';
-import 'package:bytecode/screens/safe_';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -129,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
-                          return SafeDriveScreen();
+                          return BottomScreen();
                         },
                       ));
                     },

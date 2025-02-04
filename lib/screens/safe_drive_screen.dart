@@ -1,111 +1,218 @@
 import 'package:flutter/material.dart';
 
-class SafeDriveScreen extends StatefulWidget {
-  const SafeDriveScreen({super.key});
+void main() {
+  runApp(SafeDriveApp());
+}
 
+class SafeDriveApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SafeDriveScreen(),
+    );
+  }
+}
+
+class SafeDriveScreen extends StatefulWidget {
   @override
   _SafeDriveScreenState createState() => _SafeDriveScreenState();
 }
 
 class _SafeDriveScreenState extends State<SafeDriveScreen> {
+  TextEditingController startController = TextEditingController();
+  TextEditingController endController = TextEditingController();
   DateTime? selectedDate;
+  TimeOfDay? selectedTime;
+  bool showOptions = false;
+  Map<String, bool> options = {
+    'Breakfast': false,
+    'Lunch': false,
+    'Dinner': false,
+    'Stay': false,
+    'Oil': false,
+  };
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+  Future<void> _pickDateTime(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
     );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
+
+    if (pickedDate != null) {
+      TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+
+      if (pickedTime != null) {
+        setState(() {
+          selectedDate = pickedDate;
+          selectedTime = pickedTime;
+        });
+      }
     }
+  }
+
+  void _submitDateTime() {
+    if (selectedDate != null && selectedTime != null) {
+      debugPrint('Start: ${startController.text}');
+      debugPrint('End: ${endController.text}');
+      debugPrint(
+          'Reporting Date: ${selectedDate!.toLocal().toString().split(' ')[0]}');
+      debugPrint('Reporting Time: ${selectedTime!.format(context)}');
+      setState(() {
+        showOptions = true;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select both date and time')),
+      );
+    }
+  }
+
+  void _submitOptions() {
+    debugPrint('Selected options:');
+    options.forEach((key, value) {
+      if (value) {
+        debugPrint('- $key');
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[600], // Background color
+      backgroundColor: Colors.green[700],
       appBar: AppBar(
-        backgroundColor: Colors.green[600],
-        elevation: 0,
+        backgroundColor: Colors.green[700],
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset('assets/images/Logo.png', height: 100), // Logo
-            const Icon(Icons.menu, color: Colors.white), // Menu Icon
+            Icon(Icons.directions_car, color: Colors.white),
+            SizedBox(width: 8),
+            Text("SAFE DRIVE", style: TextStyle(color: Colors.white)),
           ],
         ),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.menu, color: Colors.white), onPressed: () {}),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.circle, color: Colors.white),
-                labelText: 'Starting Place',
-                labelStyle: const TextStyle(color: Colors.white),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(10),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: startController,
+                decoration: InputDecoration(
+                  hintText: "Starting Place",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(),
                 ),
               ),
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 15),
-            TextField(
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.location_pin, color: Colors.white),
-                labelText: 'Ending Place',
-                labelStyle: const TextStyle(color: Colors.white),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(10),
+              SizedBox(height: 10),
+              TextField(
+                controller: endController,
+                decoration: InputDecoration(
+                  hintText: "Ending Place",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(),
                 ),
               ),
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 15),
-            Row(
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () => _selectDate(context),
-                  icon: const Icon(Icons.calendar_today),
-                  label: Text(selectedDate == null
-                      ? "Reporting time"
-                      : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                  ),
+              SizedBox(height: 20),
+              // Date and Time Section
+              Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () => _pickDateTime(context),
+                      icon: Icon(Icons.calendar_today),
+                      label: Text("Select Date & Time"),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Selected Date: ${selectedDate?.toLocal().toString().split(' ')[0] ?? "Not selected"}',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      'Selected Time: ${selectedTime?.format(context) ?? "Not selected"}',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    SizedBox(height: 10),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: _submitDateTime,
+                        child: Text("Submit Date & Time"),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Options Section - Only shown after date/time submission
+              if (showOptions) ...[
+                SizedBox(height: 20),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Text("Submit"),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Select Options:",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Wrap(
+                        spacing: 10,
+                        children: options.keys.map((key) {
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Checkbox(
+                                value: options[key],
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    options[key] = value!;
+                                  });
+                                },
+                              ),
+                              Text(key, style: TextStyle(color: Colors.white)),
+                            ],
+                          );
+                        }).toList(),
+                      ),
+                      SizedBox(height: 10),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: _submitOptions,
+                          child: Text("Submit Options"),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.green[800],
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.alt_route), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.car_rental), label: ''),
-        ],
       ),
     );
   }
