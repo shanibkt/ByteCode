@@ -1,3 +1,4 @@
+import 'package:bytecode/screens/login_screen.dart';
 import 'package:bytecode/screens/registration.dart';
 import 'package:bytecode/screens/safe_';
 import 'package:bytecode/screens/safe_drive_screen.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: SafeDriveApp(),
+      home: LoginScreen(),
     );
   }
 }

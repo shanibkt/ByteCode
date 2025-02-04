@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:bytecode/screens/registration.dart';
+import 'package:bytecode/screens/safe_';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -126,6 +127,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         log("username = $username");
                         log("password = $password");
                       }
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return SafeDriveScreen();
+                        },
+                      ));
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(

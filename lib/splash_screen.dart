@@ -1,7 +1,7 @@
 import 'package:bytecode/screens/home_screen.dart';
 import 'package:bytecode/screens/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -21,21 +21,21 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkAuthenticationState() async {
     await Future.delayed(
         const Duration(seconds: 2)); // Added delay to show splash screen
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
     // Navigate based on the login state
-    if (isLoggedIn) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-            builder: (ctx) =>
-                const HomeScreen()), // Ensure HomePage is imported and defined
-      );
-    } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (ctx) => const LoginScreen()),
-      );
-    }
+    // if (isLoggedIn) {
+    //   Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(
+    //         builder: (ctx) =>
+    //             const HomeScreen()), // Ensure HomePage is imported and defined
+    //   );
+    // } else {
+    //   Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(builder: (ctx) => const LoginScreen()),
+    //   );
+    // }
   }
 
   @override
