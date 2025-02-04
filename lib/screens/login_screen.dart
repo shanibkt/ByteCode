@@ -25,8 +25,19 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Center(
               child: Column(
                 children: [
-                  Image.asset("assets/images/Logo.png"),
-                  const SizedBox(height: 200),
+                  // Reduced top spacing to move logo slightly down
+                  const SizedBox(height: 50), // Changed from 0 to 50
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Image.asset(
+                        "assets/images/Logo.png",
+                        width: 200,
+                        height: 200,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 80), // Reduced from 100
                   const Text(
                     'Drive Smart, Stay Safe',
                     style: TextStyle(
@@ -120,10 +131,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       minimumSize: Size(
                         MediaQuery.of(context).size.width / 2,
                         50,
-                      ), // Width and height
-                      backgroundColor: Colors.blue[300], // Background color
-                      foregroundColor: Colors.white, // Text (foreground) color
-                      shadowColor: Colors.grey, // Shadow color
+                      ),
+                      backgroundColor: Colors.blue[300],
+                      foregroundColor: Colors.white,
+                      shadowColor: Colors.grey,
                     ),
                     child: const Text('Login'),
                   ),

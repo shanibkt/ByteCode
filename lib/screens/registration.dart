@@ -20,7 +20,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     try {
       // Make POST request
       final response = await http.post(
-        Uri.parse("http://10.0.2.2/ecommerce_app/signup.php"),
+        Uri.parse("http://192.168.13.97/bytcode/signup.php"),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: {
           'name': name,

@@ -8,7 +8,9 @@ class HomeScreen extends StatelessWidget {
     return const Scaffold(
       backgroundColor: Color.fromARGB(255, 84, 150, 81),
       body: SafeArea(
-        child: Column(),
+        child: Column(
+          children: [Text('Hello world')],
+        ),
       ),
     );
   }
