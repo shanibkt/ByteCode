@@ -1,3 +1,4 @@
+import 'package:bytecode/screens/drawer.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -6,7 +7,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 84, 150, 81),
+      backgroundColor: const Color.fromARGB(255, 84, 150, 81),
+      drawer: const DrawerScreen(), // Attach the drawer to the Scaffold
       body: SafeArea(
         child: Column(
           children: [
@@ -18,24 +20,31 @@ class HomeScreen extends StatelessWidget {
                   width: 150,
                   height: 150,
                 ),
-                IconButton(
-                    onPressed: () {},
-                    icon: Icon(
+                Builder(
+                  // Using Builder to get correct Scaffold context
+                  builder: (context) => IconButton(
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer(); // Open the drawer
+                    },
+                    icon: const Icon(
                       Icons.menu,
                       size: 50,
-                    ))
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
               ],
             ),
             Center(
               child: Column(
-                mainAxisSize: MainAxisSize.min, // Keeps the column compact
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Image.asset(
                     "assets/images/Logo.png",
                     width: 300,
                     height: 300,
                   ),
-                  Text(
+                  const Text(
                     "Drive Smart, Stay Safe",
                     style: TextStyle(
                         fontSize: 18,

@@ -1,6 +1,4 @@
 import 'package:bytecode/screens/login_screen.dart';
-import 'package:bytecode/screens/registration.dart';
-import 'package:bytecode/screens/safe_drive_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {

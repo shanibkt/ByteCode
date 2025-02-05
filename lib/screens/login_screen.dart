@@ -1,8 +1,8 @@
-import 'dart:developer';
+import 'dart:convert';
 import 'package:bytecode/screens/bottom.dart';
-import 'package:bytecode/screens/home_screen.dart';
 import 'package:bytecode/screens/registration.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,10 +12,67 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String? username, password;
-  bool processing = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
-  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  Future<void> loginUser() async {
+    const String apiUrl = "http://192.168.13.97/bytcode/login.php";
+
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final response = await http
+          .post(
+        Uri.parse(apiUrl),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          'username': _emailController.text,
+          'password': _passwordController.text,
+        }),
+      )
+          .timeout(const Duration(seconds: 10), onTimeout: () {
+        throw Exception("Connection Timeout");
+      });
+
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        if (jsonResponse['status'] == 'success') {
+          // final SharedPreferences prefs = await SharedPreferences.getInstance();
+          // await prefs.setBool('isLoggedIn', true);
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const BottomScreen(),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Login failed: ${jsonResponse['message']}")),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Error during login")),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: ${error.toString()}")),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,136 +80,80 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Form(
-            key: _formkey,
+            key: _formKey,
             child: Center(
               child: Column(
                 children: [
-                  // Reduced top spacing to move logo slightly down
-                  const SizedBox(height: 50), // Changed from 0 to 50
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Image.asset(
-                        "assets/images/Logo.png",
-                        width: 200,
-                        height: 200,
-                      ),
-                    ],
+                  const SizedBox(height: 50),
+                  Image.asset(
+                    "assets/images/Logo.png",
+                    width: 200,
+                    height: 200,
                   ),
-                  const SizedBox(height: 80), // Reduced from 100
+                  const SizedBox(height: 80),
                   const Text(
                     'Drive Smart, Stay Safe',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.normal,
-                    ),
+                    style: TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 50),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      height: 60,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                        color: Color(0xffE8E8E8),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Center(
-                          child: TextFormField(
-                            style: const TextStyle(
-                              fontSize: 15,
-                            ),
-                            decoration: const InputDecoration.collapsed(
-                              hintText: 'enter mail or phone number',
-                            ),
-                            onChanged: (text) {
-                              setState(() {
-                                username = text;
-                              });
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Enter your username text';
-                              }
-                              return null;
-                            },
-                          ),
+                    child: TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Enter email or phone number',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
+                      validator: (value) {
+                        if (value!.isEmpty) return 'Enter your email or phone';
+                        return null;
+                      },
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      height: 60,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                        color: Color(0xffE8E8E8),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Center(
-                          child: TextFormField(
-                            obscureText: true,
-                            style: const TextStyle(
-                              fontSize: 15,
-                            ),
-                            decoration: const InputDecoration.collapsed(
-                              hintText: 'Password',
-                            ),
-                            onChanged: (text) {
-                              setState(() {
-                                password = text;
-                              });
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Enter your password text';
-                              }
-                              return null;
-                            },
-                          ),
+                    child: TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
+                      validator: (value) {
+                        if (value!.isEmpty) return 'Enter your password';
+                        return null;
+                      },
                     ),
                   ),
-                  const SizedBox(
-                    height: 35,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formkey.currentState!.validate()) {
-                        log("username = $username");
-                        log("password = $password");
-                      }
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return BottomScreen();
-                        },
-                      ));
-                    },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(
-                        MediaQuery.of(context).size.width / 2,
-                        50,
-                      ),
-                      backgroundColor: Colors.blue[300],
-                      foregroundColor: Colors.white,
-                      shadowColor: Colors.grey,
-                    ),
-                    child: const Text('Login'),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
+                  const SizedBox(height: 35),
+                  _isLoading
+                      ? const CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: loginUser,
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(
+                              MediaQuery.of(context).size.width / 2,
+                              50,
+                            ),
+                            backgroundColor: Colors.blue[300],
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text('Login'),
+                        ),
+                  const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        "Dont't have anccout?",
+                        "Don't have an account?",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       TextButton(
@@ -161,11 +162,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return const RegistrationScreen();
-                            },
-                          ));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RegistrationScreen(),
+                            ),
+                          );
                         },
                       )
                     ],

@@ -1,6 +1,6 @@
+import 'package:bytecode/screens/lane_recommendation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bytecode/screens/home_screen.dart';
-import 'package:bytecode/screens/line_keep.dart';
 import 'package:bytecode/screens/safe_drive_screen.dart';
 
 class BottomScreen extends StatefulWidget {
@@ -22,7 +22,7 @@ class _BottomScreenState extends State<BottomScreen> {
   final List<Widget> _pages = [
     const HomeScreen(),
     SafeDriveScreen(),
-    const LineKeepScren(),
+    const LaneRecommendationScreen(),
   ];
 
   @override
