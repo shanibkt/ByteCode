@@ -10,13 +10,13 @@ class DrawerScreen extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          DrawerHeader(
-            decoration: const BoxDecoration(
+          const DrawerHeader(
+            decoration: BoxDecoration(
               color: Color.fromARGB(255, 84, 150, 81),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 CircleAvatar(
                   radius: 30,
                   backgroundImage: AssetImage("assets/images/profile.png"),
@@ -49,7 +49,7 @@ class DrawerScreen extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacement(context, MaterialPageRoute(
                 builder: (context) {
-                  return LoginScreen();
+                  return const LoginScreen();
                 },
               ));
             },

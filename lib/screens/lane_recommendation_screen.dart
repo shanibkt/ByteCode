@@ -71,7 +71,7 @@ class _LaneRecommendationScreenState extends State<LaneRecommendationScreen>
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: Icon(Icons.gps_fixed),
+        child: const Icon(Icons.gps_fixed),
       ),
       backgroundColor: Colors.grey[900],
       appBar: AppBar(

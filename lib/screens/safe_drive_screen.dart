@@ -1,3 +1,4 @@
+import 'package:bytecode/chatbot__screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -5,6 +6,8 @@ void main() {
 }
 
 class SafeDriveApp extends StatelessWidget {
+  const SafeDriveApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,6 +18,8 @@ class SafeDriveApp extends StatelessWidget {
 }
 
 class SafeDriveScreen extends StatefulWidget {
+  const SafeDriveScreen({super.key});
+
   @override
   _SafeDriveScreenState createState() => _SafeDriveScreenState();
 }
@@ -68,7 +73,7 @@ class _SafeDriveScreenState extends State<SafeDriveScreen> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select both date and time')),
+        const SnackBar(content: Text('Please select both date and time')),
       );
     }
   }
@@ -88,7 +93,7 @@ class _SafeDriveScreenState extends State<SafeDriveScreen> {
       backgroundColor: Colors.green[700],
       appBar: AppBar(
         backgroundColor: Colors.green[700],
-        title: Row(
+        title: const Row(
           children: [
             Icon(Icons.directions_car, color: Colors.white),
             SizedBox(width: 8),
@@ -97,38 +102,39 @@ class _SafeDriveScreenState extends State<SafeDriveScreen> {
         ),
         actions: [
           IconButton(
-              icon: Icon(Icons.menu, color: Colors.white), onPressed: () {}),
+              icon: const Icon(Icons.menu, color: Colors.white),
+              onPressed: () {}),
         ],
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextField(
                 controller: startController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Starting Place",
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: endController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Ending Place",
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Date and Time Section
               Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.white),
                   borderRadius: BorderRadius.circular(8),
@@ -138,23 +144,23 @@ class _SafeDriveScreenState extends State<SafeDriveScreen> {
                   children: [
                     ElevatedButton.icon(
                       onPressed: () => _pickDateTime(context),
-                      icon: Icon(Icons.calendar_today),
-                      label: Text("Select Date & Time"),
+                      icon: const Icon(Icons.calendar_today),
+                      label: const Text("Select Date & Time"),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text(
                       'Selected Date: ${selectedDate?.toLocal().toString().split(' ')[0] ?? "Not selected"}',
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                     Text(
                       'Selected Time: ${selectedTime?.format(context) ?? "Not selected"}',
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Center(
                       child: ElevatedButton(
                         onPressed: _submitDateTime,
-                        child: Text("Submit Date & Time"),
+                        child: const Text("Submit Date & Time"),
                       ),
                     ),
                   ],
@@ -162,9 +168,9 @@ class _SafeDriveScreenState extends State<SafeDriveScreen> {
               ),
               // Options Section - Only shown after date/time submission
               if (showOptions) ...[
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.white),
                     borderRadius: BorderRadius.circular(8),
@@ -172,14 +178,14 @@ class _SafeDriveScreenState extends State<SafeDriveScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Select Options:",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Wrap(
                         spacing: 10,
                         children: options.keys.map((key) {
@@ -194,16 +200,57 @@ class _SafeDriveScreenState extends State<SafeDriveScreen> {
                                   });
                                 },
                               ),
-                              Text(key, style: TextStyle(color: Colors.white)),
+                              Text(key,
+                                  style: const TextStyle(color: Colors.white)),
                             ],
                           );
                         }).toList(),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Center(
                         child: ElevatedButton(
-                          onPressed: _submitOptions,
-                          child: Text("Submit Options"),
+                          onPressed: () {
+                            _submitOptions();
+
+                            String startLocation = startController.text;
+                            String endLocation = endController.text;
+
+                            if (startLocation.isNotEmpty &&
+                                endLocation.isNotEmpty &&
+                                selectedDate != null &&
+                                selectedTime != null) {
+                              // Convert Date and Time into a DateTime object
+                              DateTime dateTime = DateTime(
+                                selectedDate!.year,
+                                selectedDate!.month,
+                                selectedDate!.day,
+                                selectedTime!.hour,
+                                selectedTime!.minute,
+                              );
+
+                              // Navigate to ChatbotScreen with valid parameters
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return ChatbotScreen(
+                                      startLocation: startLocation,
+                                      endLocation: endLocation,
+                                      dateTime:
+                                          dateTime, // Now passing a proper DateTime object
+                                    );
+                                  },
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'Please enter all required details')),
+                              );
+                            }
+                          },
+                          child: const Text("Submit Options"),
                         ),
                       ),
                     ],

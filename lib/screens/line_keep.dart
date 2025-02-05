@@ -20,7 +20,7 @@ class LineKeepScren extends StatelessWidget {
                 ),
                 IconButton(
                     onPressed: () {},
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.menu,
                       size: 50,
                     ))
